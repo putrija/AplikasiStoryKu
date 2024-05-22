@@ -4,15 +4,13 @@ import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
 import android.content.Intent
 import android.os.Build
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import android.view.WindowInsets
 import android.view.WindowManager
 import android.widget.Toast
 import androidx.activity.viewModels
-import androidx.appcompat.app.AlertDialog
-import com.dicoding.aplikasistoryku.R
+import androidx.appcompat.app.AppCompatActivity
 import com.dicoding.aplikasistoryku.data.api.ApiConfig
 import com.dicoding.aplikasistoryku.data.api.ApiResponse
 import com.dicoding.aplikasistoryku.data.pref.UserModel
@@ -58,11 +56,15 @@ class LoginActivity : AppCompatActivity() {
             viewModel.login(email, password).observe(this) { response ->
                 when (response) {
                     is ApiResponse.Success -> {
-                        Toast.makeText(this, response.data, Toast.LENGTH_SHORT).show()
-                        viewModel.saveSession(UserModel(email, "sample_token"))
-                        navigateToMainActivity()
+                        val token = response.data.loginResult?.token ?: ""
+                        if (token.isNotEmpty()) {
+                            Toast.makeText(this, "Login successful", Toast.LENGTH_SHORT).show()
+                            viewModel.saveSession(UserModel(email, token))
+                            navigateToMainActivity()
+                        } else {
+                            Toast.makeText(this, "Token not found", Toast.LENGTH_SHORT).show()
+                        }
                     }
-
                     is ApiResponse.Error -> {
                         Toast.makeText(this, response.errorMessage, Toast.LENGTH_SHORT).show()
                     }
@@ -112,5 +114,4 @@ class LoginActivity : AppCompatActivity() {
             startDelay = 100
         }.start()
     }
-
 }

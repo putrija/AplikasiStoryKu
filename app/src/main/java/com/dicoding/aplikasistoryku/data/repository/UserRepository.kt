@@ -5,6 +5,7 @@ import com.dicoding.aplikasistoryku.data.api.ApiResponse
 import com.dicoding.aplikasistoryku.data.api.ApiService
 import com.dicoding.aplikasistoryku.data.pref.UserModel
 import com.dicoding.aplikasistoryku.data.pref.UserPreference
+import com.dicoding.aplikasistoryku.data.response.LoginResponse
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.withContext
@@ -18,32 +19,31 @@ class UserRepository private constructor(
         userPreference.saveSession(user)
     }
 
-    fun getSession(): Flow<UserModel> {
-        return userPreference.getSession()
-    }
-
-    suspend fun logout() {
-        userPreference.logout()
-    }
-
-    suspend fun login(email: String, password: String): ApiResponse<String> {
+    suspend fun login(email: String, password: String): ApiResponse<LoginResponse> {
         return withContext(Dispatchers.IO) {
             try {
                 val loginResponse = apiService.login(email, password)
-                if (!loginResponse.error && !loginResponse.token.isNullOrEmpty()) {
-                    val user = UserModel(email, loginResponse.token)
-                    userPreference.saveSession(user)
-                    ApiResponse.Success("Login successful")
-
+                if (!loginResponse.error!! && loginResponse.loginResult != null) {
+                    val user = UserModel(email, loginResponse.loginResult.token ?: "")
+                    saveSession(user)
+                    ApiResponse.Success(loginResponse)
                 } else {
                     ApiResponse.Error(loginResponse.message ?: "Login failed")
                 }
             } catch (e: Exception) {
                 Log.e("UserRepository", "Error during login: ${e.message}")
                 e.printStackTrace()
-                ApiResponse.Error("Login failed")
+                ApiResponse.Error("Login Gagal!")
             }
         }
+    }
+
+    fun getSession(): Flow<UserModel> {
+        return userPreference.getSession()
+    }
+
+    suspend fun logout() {
+        userPreference.logout()
     }
 
     companion object {
