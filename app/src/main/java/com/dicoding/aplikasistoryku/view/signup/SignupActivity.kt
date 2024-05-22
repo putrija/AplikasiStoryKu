@@ -13,11 +13,14 @@ import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import com.dicoding.aplikasistoryku.R
 import com.dicoding.aplikasistoryku.data.api.ApiConfig
+import com.dicoding.aplikasistoryku.data.response.ErrorResponse
 import com.dicoding.aplikasistoryku.databinding.ActivitySignupBinding
 import com.dicoding.aplikasistoryku.view.login.LoginActivity
+import com.google.gson.Gson
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import retrofit2.HttpException
 import java.util.regex.Pattern
 
 class SignupActivity : AppCompatActivity() {
@@ -68,13 +71,18 @@ class SignupActivity : AppCompatActivity() {
         GlobalScope.launch(Dispatchers.Main) {
             try {
                 val registerResponse = apiService.register(name, email, password)
-                if (registerResponse.error == false) {
-                    Toast.makeText(this@SignupActivity, "Registrasi berhasil", Toast.LENGTH_SHORT).show()
-                    navigateToLoginActivity()
-                } else {
-                    Toast.makeText(this@SignupActivity, registerResponse.message ?: "Registrasi gagal", Toast.LENGTH_SHORT).show()
-                }
+                val message = registerResponse.message
+                // Handle success message
+                Toast.makeText(this@SignupActivity, message, Toast.LENGTH_SHORT).show()
+                navigateToLoginActivity()
+            } catch (e: HttpException) {
+                // Handle HttpException
+                val errorBody = e.response()?.errorBody()?.string()
+                val errorResponse = Gson().fromJson(errorBody, ErrorResponse::class.java)
+                val errorMessage = errorResponse.message
+                Toast.makeText(this@SignupActivity, errorMessage, Toast.LENGTH_SHORT).show()
             } catch (e: Exception) {
+                // Handle other exceptions
                 Toast.makeText(this@SignupActivity, "Registrasi gagal", Toast.LENGTH_SHORT).show()
             }
         }
