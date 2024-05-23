@@ -7,15 +7,21 @@ import android.view.WindowInsets
 import android.view.WindowManager
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.dicoding.aplikasistoryku.R
+import com.dicoding.aplikasistoryku.data.adapter.StoryAdapter
 import com.dicoding.aplikasistoryku.databinding.ActivityMainBinding
 import com.dicoding.aplikasistoryku.view.ViewModelFactory
 import com.dicoding.aplikasistoryku.view.welcome.WelcomeActivity
 
 class MainActivity : AppCompatActivity() {
+    private lateinit var binding: ActivityMainBinding
+    private lateinit var storyAdapter: StoryAdapter
+
     private val viewModel by viewModels<MainViewModel> {
         ViewModelFactory(this)
     }
-    private lateinit var binding: ActivityMainBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -31,11 +37,11 @@ class MainActivity : AppCompatActivity() {
 
         setupView()
         setupAction()
-        fetchStories()
-    }
+        setupRecyclerView()
 
-    private fun fetchStories() {
+        // Fetch stories from API
         viewModel.getStoriesFromApi()
+        observeStories()
     }
 
     private fun setupView() {
@@ -57,4 +63,15 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    private fun setupRecyclerView() {
+        storyAdapter = StoryAdapter(emptyList())
+        binding.rvStories.layoutManager = LinearLayoutManager(this)
+        binding.rvStories.adapter = storyAdapter
+    }
+
+    private fun observeStories() {
+        viewModel.stories.observe(this) { stories ->
+            storyAdapter.setStories(stories)
+        }
+    }
 }
