@@ -1,5 +1,6 @@
 package com.dicoding.aplikasistoryku.view.main
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
@@ -16,6 +17,22 @@ class MainViewModel(private val repository: UserRepository) : ViewModel() {
     fun logout() {
         viewModelScope.launch {
             repository.logout()
+        }
+    }
+
+    fun getStoriesFromApi() {
+        viewModelScope.launch {
+            try {
+                val user = repository.getUser()
+                val token = user.token
+                Log.d("Token", "Token: $token")
+                val response = repository.getStories(token)
+
+                Log.d("API Response", response.toString())
+
+            } catch (e: Exception) {
+                Log.e("Error", "Failed to fetch stories: ${e.message}")
+            }
         }
     }
 

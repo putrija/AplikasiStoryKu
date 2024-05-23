@@ -5,10 +5,15 @@ import com.dicoding.aplikasistoryku.data.api.ApiResponse
 import com.dicoding.aplikasistoryku.data.api.ApiService
 import com.dicoding.aplikasistoryku.data.pref.UserModel
 import com.dicoding.aplikasistoryku.data.pref.UserPreference
+import com.dicoding.aplikasistoryku.data.response.ErrorResponse
 import com.dicoding.aplikasistoryku.data.response.LoginResponse
+import com.dicoding.aplikasistoryku.data.response.StoryResponse
+import com.google.gson.Gson
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.withContext
+import retrofit2.HttpException
 
 class UserRepository private constructor(
     private val userPreference: UserPreference,
@@ -44,6 +49,24 @@ class UserRepository private constructor(
 
     suspend fun logout() {
         userPreference.logout()
+    }
+
+    suspend fun getUser(): UserModel {
+        return userPreference.getUser().first()
+    }
+
+    suspend fun getStories(token: String): StoryResponse {
+        try {
+            return apiService.getStories("Bearer $token")
+        } catch (e: HttpException) {
+            val errorBody = e.response()?.errorBody()?.string()
+            val errorResponse = Gson().fromJson(errorBody, ErrorResponse::class.java)
+            Log.e("UserRepository", "HTTP Error: ${errorResponse.message}")
+            throw Exception("HTTP Error: ${errorResponse.message}")
+        } catch (e: Exception) {
+            Log.e("UserRepository", "Error: ${e.message}")
+            throw Exception("Error: ${e.message}")
+        }
     }
 
     companion object {
