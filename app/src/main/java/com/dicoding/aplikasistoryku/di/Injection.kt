@@ -2,15 +2,17 @@ package com.dicoding.aplikasistoryku.di
 
 import android.content.Context
 import com.dicoding.aplikasistoryku.data.api.ApiConfig
-import com.dicoding.aplikasistoryku.data.api.ApiService
 import com.dicoding.aplikasistoryku.data.pref.UserPreference
 import com.dicoding.aplikasistoryku.data.pref.dataStore
 import com.dicoding.aplikasistoryku.data.repository.UserRepository
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
 
 object Injection {
-    fun provideRepository(context: Context, apiService: ApiService): UserRepository {
-        val pref = UserPreference.getInstance(context.dataStore)
-        return UserRepository.getInstance(pref, apiService) // Meneruskan apiService saat membuat instance UserRepository
-    }
+    fun provideRepository(context: Context): UserRepository {
+    val pref = UserPreference.getInstance(context.dataStore)
+    val user = runBlocking { pref.getUser().first() }
+    val apiService = ApiConfig.getApiService(user.token)
+    return UserRepository.getInstance(apiService, pref)
+}
 }

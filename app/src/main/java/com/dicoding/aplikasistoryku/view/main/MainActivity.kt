@@ -15,12 +15,11 @@ import com.dicoding.aplikasistoryku.data.api.ApiConfig
 import com.dicoding.aplikasistoryku.databinding.ActivityMainBinding
 import com.dicoding.aplikasistoryku.di.Injection
 import com.dicoding.aplikasistoryku.view.ViewModelFactory
-import com.dicoding.aplikasistoryku.view.ViewModelFactory.Companion.getInstance
 import com.dicoding.aplikasistoryku.view.welcome.WelcomeActivity
 
 class MainActivity : AppCompatActivity() {
     private val viewModel by viewModels<MainViewModel> {
-        ViewModelFactory.getInstance(this, Injection.provideRepository(this, ApiConfig.getApiService()))
+        ViewModelFactory(this)
     }
     private lateinit var binding: ActivityMainBinding
 

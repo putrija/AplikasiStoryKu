@@ -51,11 +51,11 @@ class UserRepository private constructor(
         private var instance: UserRepository? = null
 
         fun getInstance(
-            userPreference: UserPreference,
-            apiService: ApiService // Tambahkan parameter apiService
+            userPreference: ApiService,
+            apiService: UserPreference // Tambahkan parameter apiService
         ): UserRepository =
             instance ?: synchronized(this) {
-                instance ?: UserRepository(userPreference, apiService) // Gunakan apiService saat membuat instance
+                instance ?: UserRepository(apiService, userPreference) // Gunakan apiService saat membuat instance
             }.also { instance = it }
     }
 }

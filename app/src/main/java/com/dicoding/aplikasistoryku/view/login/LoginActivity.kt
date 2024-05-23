@@ -18,10 +18,11 @@ import com.dicoding.aplikasistoryku.databinding.ActivityLoginBinding
 import com.dicoding.aplikasistoryku.di.Injection
 import com.dicoding.aplikasistoryku.view.ViewModelFactory
 import com.dicoding.aplikasistoryku.view.main.MainActivity
+import com.dicoding.aplikasistoryku.view.main.MainViewModel
 
 class LoginActivity : AppCompatActivity() {
     private val viewModel by viewModels<LoginViewModel> {
-        ViewModelFactory.getInstance(this, Injection.provideRepository(this, ApiConfig.getApiService()))
+        ViewModelFactory(this)
     }
     private lateinit var binding: ActivityLoginBinding
 

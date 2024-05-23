@@ -66,7 +66,7 @@ class SignupActivity : AppCompatActivity() {
     }
 
     private fun registerUser(name: String, email: String, password: String) {
-        val apiService = ApiConfig.getApiService()
+        val apiService = ApiConfig.getApiService("")
 
         GlobalScope.launch(Dispatchers.Main) {
             try {
