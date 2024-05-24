@@ -13,6 +13,7 @@ import com.dicoding.aplikasistoryku.R
 import com.dicoding.aplikasistoryku.data.adapter.StoryAdapter
 import com.dicoding.aplikasistoryku.databinding.ActivityMainBinding
 import com.dicoding.aplikasistoryku.view.ViewModelFactory
+import com.dicoding.aplikasistoryku.view.addStory.AddStoryActivity
 import com.dicoding.aplikasistoryku.view.detail.DetailActivity
 import com.dicoding.aplikasistoryku.view.welcome.WelcomeActivity
 
@@ -43,6 +44,12 @@ class MainActivity : AppCompatActivity() {
         // Fetch stories from API
         viewModel.getStoriesFromApi()
         observeStories()
+        binding.fabAddStory.setOnClickListener { navigateToAddStory() }
+    }
+
+    private fun navigateToAddStory() {
+        val intent = Intent(this, AddStoryActivity::class.java)
+        startActivity(intent)
     }
 
     private fun setupView() {
