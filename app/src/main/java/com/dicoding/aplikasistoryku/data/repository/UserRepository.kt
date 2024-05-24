@@ -1,11 +1,13 @@
 package com.dicoding.aplikasistoryku.data.repository
 
 import android.util.Log
+import androidx.lifecycle.liveData
 import com.dicoding.aplikasistoryku.data.api.ApiResponse
 import com.dicoding.aplikasistoryku.data.api.ApiService
 import com.dicoding.aplikasistoryku.data.pref.UserModel
 import com.dicoding.aplikasistoryku.data.pref.UserPreference
 import com.dicoding.aplikasistoryku.data.response.ErrorResponse
+import com.dicoding.aplikasistoryku.data.response.FileUploadResponse
 import com.dicoding.aplikasistoryku.data.response.LoginResponse
 import com.dicoding.aplikasistoryku.data.response.StoryResponse
 import com.google.gson.Gson
@@ -13,7 +15,12 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.withContext
+import okhttp3.MediaType.Companion.toMediaType
+import okhttp3.MultipartBody
+import okhttp3.RequestBody.Companion.asRequestBody
+import okhttp3.RequestBody.Companion.toRequestBody
 import retrofit2.HttpException
+import java.io.File
 
 class UserRepository private constructor(
     private val userPreference: UserPreference,
@@ -66,6 +73,25 @@ class UserRepository private constructor(
         } catch (e: Exception) {
             Log.e("UserRepository", "Error: ${e.message}")
             throw Exception("Error: ${e.message}")
+        }
+    }
+
+    fun uploadStory(imageFile: File, description: String, token: String) = liveData {
+        emit(ApiResponse.Loading)
+        val requestBody = description.toRequestBody("text/plain".toMediaType())
+        val requestImageFile = imageFile.asRequestBody("image/jpeg".toMediaType())
+        val multipartBody = MultipartBody.Part.createFormData(
+            "photo",
+            imageFile.name,
+            requestImageFile
+        )
+        try {
+            val successResponse = apiService.uploadStory("Bearer $token", multipartBody, requestBody)
+            emit(ApiResponse.Success(successResponse))
+        } catch (e: HttpException) {
+            val errorBody = e.response()?.errorBody()?.string()
+            val errorResponse = Gson().fromJson(errorBody, FileUploadResponse::class.java)
+            emit(ApiResponse.Error(errorResponse.message))
         }
     }
 
