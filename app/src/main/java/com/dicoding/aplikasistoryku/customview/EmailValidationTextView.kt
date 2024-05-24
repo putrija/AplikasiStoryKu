@@ -5,9 +5,10 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.util.AttributeSet
 import androidx.appcompat.widget.AppCompatEditText
+import com.google.android.material.textfield.TextInputEditText
 import java.util.regex.Pattern
 
-class EmailValidationEditText : AppCompatEditText {
+class EmailValidationEditText : TextInputEditText {
 
     constructor(context: Context) : super(context) {
         init()
