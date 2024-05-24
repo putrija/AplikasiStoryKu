@@ -13,9 +13,10 @@ import com.dicoding.aplikasistoryku.R
 import com.dicoding.aplikasistoryku.data.adapter.StoryAdapter
 import com.dicoding.aplikasistoryku.databinding.ActivityMainBinding
 import com.dicoding.aplikasistoryku.view.ViewModelFactory
+import com.dicoding.aplikasistoryku.view.detail.DetailActivity
 import com.dicoding.aplikasistoryku.view.welcome.WelcomeActivity
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), StoryAdapter.StoryClickListener {
     private lateinit var binding: ActivityMainBinding
     private lateinit var storyAdapter: StoryAdapter
 
@@ -64,9 +65,16 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setupRecyclerView() {
-        storyAdapter = StoryAdapter(emptyList())
+        storyAdapter = StoryAdapter(emptyList(), this)
         binding.rvStories.layoutManager = LinearLayoutManager(this)
         binding.rvStories.adapter = storyAdapter
+    }
+
+    override fun onStoryClicked(storyId: String) {
+        // Navigasi ke DetailActivity dengan mengirimkan storyId
+        val intent = Intent(this, DetailActivity::class.java)
+        intent.putExtra("STORY_ID", storyId)
+        startActivity(intent)
     }
 
     private fun observeStories() {

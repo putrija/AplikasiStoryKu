@@ -9,7 +9,11 @@ import com.bumptech.glide.Glide
 import com.dicoding.aplikasistoryku.data.response.ListStoryItem
 import com.dicoding.aplikasistoryku.databinding.ItemStoryBinding
 
-class StoryAdapter(private var storyList: List<ListStoryItem>) : RecyclerView.Adapter<StoryAdapter.StoryViewHolder>() {
+class StoryAdapter(private var storyList: List<ListStoryItem>, private val clickListener: StoryClickListener) : RecyclerView.Adapter<StoryAdapter.StoryViewHolder>() {
+
+    interface StoryClickListener {
+        fun onStoryClicked(storyId: String)
+    }
 
     fun setStories(stories: List<ListStoryItem>) {
         storyList = stories
@@ -24,6 +28,9 @@ class StoryAdapter(private var storyList: List<ListStoryItem>) : RecyclerView.Ad
     override fun onBindViewHolder(holder: StoryViewHolder, position: Int) {
         val story = storyList[position]
         holder.bind(story)
+        holder.itemView.setOnClickListener {
+            clickListener.onStoryClicked(story.id ?: "")
+        }
     }
 
     override fun getItemCount(): Int {
