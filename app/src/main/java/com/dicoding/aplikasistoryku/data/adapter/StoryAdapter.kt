@@ -1,5 +1,6 @@
 package com.dicoding.aplikasistoryku.data.adapter
 
+import android.content.Intent
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
@@ -8,12 +9,9 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.dicoding.aplikasistoryku.data.response.ListStoryItem
 import com.dicoding.aplikasistoryku.databinding.ItemStoryBinding
+import com.dicoding.aplikasistoryku.view.detail.DetailActivity
 
-class StoryAdapter(private var storyList: List<ListStoryItem>, private val clickListener: StoryClickListener) : RecyclerView.Adapter<StoryAdapter.StoryViewHolder>() {
-
-    interface StoryClickListener {
-        fun onStoryClicked(storyId: String)
-    }
+class StoryAdapter(private var storyList: List<ListStoryItem>) : RecyclerView.Adapter<StoryAdapter.StoryViewHolder>() {
 
     fun setStories(stories: List<ListStoryItem>) {
         storyList = stories
@@ -29,7 +27,10 @@ class StoryAdapter(private var storyList: List<ListStoryItem>, private val click
         val story = storyList[position]
         holder.bind(story)
         holder.itemView.setOnClickListener {
-            clickListener.onStoryClicked(story.id ?: "")
+            val context = holder.itemView.context
+            val intent = Intent(context, DetailActivity::class.java)
+            intent.putExtra("STORY_ID", story.id ?: "")
+            context.startActivity(intent)
         }
     }
 
@@ -48,6 +49,8 @@ class StoryAdapter(private var storyList: List<ListStoryItem>, private val click
                 tvName.text = story.name
                 tvDescription.text = story.description
             }
+
+
         }
     }
 }
