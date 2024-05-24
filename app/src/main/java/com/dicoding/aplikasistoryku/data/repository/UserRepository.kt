@@ -86,7 +86,8 @@ class UserRepository private constructor(
             requestImageFile
         )
         try {
-            val successResponse = apiService.uploadStory("Bearer $token", multipartBody, requestBody)
+            val successResponse =
+                apiService.uploadStory("Bearer $token", multipartBody, requestBody)
             emit(ApiResponse.Success(successResponse))
         } catch (e: HttpException) {
             val errorBody = e.response()?.errorBody()?.string()
@@ -101,10 +102,13 @@ class UserRepository private constructor(
 
         fun getInstance(
             userPreference: ApiService,
-            apiService: UserPreference // Tambahkan parameter apiService
+            apiService: UserPreference
         ): UserRepository =
             instance ?: synchronized(this) {
-                instance ?: UserRepository(apiService, userPreference) // Gunakan apiService saat membuat instance
+                instance ?: UserRepository(
+                    apiService,
+                    userPreference
+                )
             }.also { instance = it }
     }
 }

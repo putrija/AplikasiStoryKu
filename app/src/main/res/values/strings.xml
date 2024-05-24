@@ -18,4 +18,5 @@
     <string name="camera">Camera</string>
     <string name="empty_image_warning">Silakan masukkan berkas gambar terlebih dahulu.</string>
     <string name="empty_description_warning">Silakan masukkan deskripsi story terlebih dahulu.</string>
+    <string name="tambahkan_deskripsi_post">Tambahkan deskripsi post</string>
 </resources>

@@ -4,16 +4,12 @@ import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
 import android.content.Intent
 import android.os.Build
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextWatcher
 import android.view.View
 import android.view.WindowInsets
 import android.view.WindowManager
 import android.widget.Toast
-import androidx.appcompat.app.AlertDialog
-import com.dicoding.aplikasistoryku.R
+import androidx.appcompat.app.AppCompatActivity
 import com.dicoding.aplikasistoryku.data.api.ApiConfig
 import com.dicoding.aplikasistoryku.data.response.ErrorResponse
 import com.dicoding.aplikasistoryku.databinding.ActivitySignupBinding
@@ -39,7 +35,6 @@ class SignupActivity : AppCompatActivity() {
     }
 
 
-
     private fun setupView() {
         @Suppress("DEPRECATION")
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
@@ -55,14 +50,14 @@ class SignupActivity : AppCompatActivity() {
 
     private fun setupAction() {
         binding.signupButton.setOnClickListener {
-            val email = binding.emailEditText.text.toString()
-            val name = binding.nameEditText.text.toString()
-            val password = binding.passwordEditText.text.toString()
+            val email = binding.edRegisterEmail.text.toString()
+            val name = binding.edRegisterName.text.toString()
+            val password = binding.edRegisterPassword.text.toString()
 
             if (!isValidEmail(email)) {
-                binding.emailEditText.setError("Email tidak valid")
+                binding.edRegisterEmail.setError("Email tidak valid")
             } else if (password.length < 8) {
-                binding.passwordEditText.setError("Password tidak boleh kurang dari 8 karakter")
+                binding.edRegisterPassword.setError("Password tidak boleh kurang dari 8 karakter")
             } else {
                 registerUser(name, email, password)
             }
@@ -76,17 +71,14 @@ class SignupActivity : AppCompatActivity() {
             try {
                 val registerResponse = apiService.register(name, email, password)
                 val message = registerResponse.message
-                // Handle success message
                 Toast.makeText(this@SignupActivity, message, Toast.LENGTH_SHORT).show()
                 navigateToLoginActivity()
             } catch (e: HttpException) {
-                // Handle HttpException
                 val errorBody = e.response()?.errorBody()?.string()
                 val errorResponse = Gson().fromJson(errorBody, ErrorResponse::class.java)
                 val errorMessage = errorResponse.message
                 Toast.makeText(this@SignupActivity, errorMessage, Toast.LENGTH_SHORT).show()
             } catch (e: Exception) {
-                // Handle other exceptions
                 Toast.makeText(this@SignupActivity, "Registrasi gagal", Toast.LENGTH_SHORT).show()
             }
         }

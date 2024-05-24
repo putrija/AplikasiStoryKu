@@ -36,14 +36,12 @@ class MainViewModel(private val repository: UserRepository) : ViewModel() {
 
                 Log.d("API Response", response.toString())
 
-                // Check if data listStory is not empty
                 if (response.listStory.isNotEmpty()) {
                     Log.d("List Story", "Data listStory is not empty")
                 } else {
                     Log.d("List Story", "Data listStory is empty")
                 }
 
-                // Update the LiveData with the list of stories
                 _stories.value = response.listStory
 
             } catch (e: Exception) {

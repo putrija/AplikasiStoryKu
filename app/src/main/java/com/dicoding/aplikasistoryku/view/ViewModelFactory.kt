@@ -16,15 +16,19 @@ class ViewModelFactory(private val context: Context) : ViewModelProvider.NewInst
             modelClass.isAssignableFrom(LoginViewModel::class.java) -> {
                 LoginViewModel(Injection.provideRepository(context)) as T
             }
+
             modelClass.isAssignableFrom(MainViewModel::class.java) -> {
                 MainViewModel(Injection.provideRepository(context)) as T
             }
+
             modelClass.isAssignableFrom(DetailViewModel::class.java) -> {
                 DetailViewModel(Injection.provideRepository(context)) as T
             }
+
             modelClass.isAssignableFrom(AddStoryViewModel::class.java) -> {
                 AddStoryViewModel(Injection.provideRepository(context)) as T
             }
+
             else -> throw IllegalArgumentException("Unknown ViewModel class: " + modelClass.name)
         }
     }

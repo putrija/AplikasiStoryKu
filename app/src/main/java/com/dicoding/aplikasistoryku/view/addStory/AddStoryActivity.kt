@@ -36,9 +36,8 @@ class AddStoryActivity : AppCompatActivity() {
 
         binding.galleryButton.setOnClickListener { startGallery() }
         binding.cameraButton.setOnClickListener { startCamera() }
-        binding.uploadButton.setOnClickListener { uploadImage() }
+        binding.buttonAdd.setOnClickListener { uploadImage() }
 
-        // Memulihkan URI gambar setelah rotasi
         savedInstanceState?.getString("currentImageUri")?.let { imageUriString ->
             currentImageUri = imageUriString.toUri()
             showImage()
@@ -94,33 +93,39 @@ class AddStoryActivity : AppCompatActivity() {
 
             CoroutineScope(Dispatchers.Main).launch {
                 if (imageFile.exists()) {
-                    val description = binding.postDescriptionEditText.text.toString()
+                    val description = binding.edAddDescription.text.toString()
 
                     if (description.isNotEmpty()) {
                         try {
                             val token = viewModel.getToken()
-                            viewModel.uploadStory(imageFile, description, token).observe(this@AddStoryActivity) { result ->
-                                if (result != null) {
-                                    when (result) {
-                                        is ApiResponse.Loading -> {
-                                            showLoading(true)
-                                        }
-                                        is ApiResponse.Success -> {
-                                            showToast(result.data.message)
-                                            showLoading(false)
+                            viewModel.uploadStory(imageFile, description, token)
+                                .observe(this@AddStoryActivity) { result ->
+                                    if (result != null) {
+                                        when (result) {
+                                            is ApiResponse.Loading -> {
+                                                showLoading(true)
+                                            }
 
-                                            // Redirect to MainActivity after successful upload
-                                            val intent = Intent(this@AddStoryActivity, MainActivity::class.java)
-                                            intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
-                                            startActivity(intent)
-                                        }
-                                        is ApiResponse.Error -> {
-                                            showToast(result.errorMessage)
-                                            showLoading(false)
+                                            is ApiResponse.Success -> {
+                                                showToast(result.data.message)
+                                                showLoading(false)
+
+                                                val intent = Intent(
+                                                    this@AddStoryActivity,
+                                                    MainActivity::class.java
+                                                )
+                                                intent.flags =
+                                                    Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
+                                                startActivity(intent)
+                                            }
+
+                                            is ApiResponse.Error -> {
+                                                showToast(result.errorMessage)
+                                                showLoading(false)
+                                            }
                                         }
                                     }
                                 }
-                            }
                         } catch (e: Exception) {
                             Log.e("Error", "Error getting token: ${e.message}")
                         }

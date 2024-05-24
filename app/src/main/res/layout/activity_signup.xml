@@ -64,7 +64,7 @@
         tools:alpha="100">
 
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/nameEditText"
+            android:id="@+id/ed_register_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ems="10"
@@ -99,7 +99,7 @@
         tools:alpha="100">
 
         <com.dicoding.aplikasistoryku.customview.EmailValidationEditText
-            android:id="@+id/emailEditText"
+            android:id="@+id/ed_register_email"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ems="10"
@@ -135,7 +135,7 @@
         tools:alpha="100">
 
         <com.dicoding.aplikasistoryku.customview.PasswordValidationEditText
-            android:id="@+id/passwordEditText"
+            android:id="@+id/ed_register_password"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ems="10"

@@ -11,14 +11,11 @@ import android.view.WindowManager
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import com.dicoding.aplikasistoryku.data.api.ApiConfig
 import com.dicoding.aplikasistoryku.data.api.ApiResponse
 import com.dicoding.aplikasistoryku.data.pref.UserModel
 import com.dicoding.aplikasistoryku.databinding.ActivityLoginBinding
-import com.dicoding.aplikasistoryku.di.Injection
 import com.dicoding.aplikasistoryku.view.ViewModelFactory
 import com.dicoding.aplikasistoryku.view.main.MainActivity
-import com.dicoding.aplikasistoryku.view.main.MainViewModel
 
 class LoginActivity : AppCompatActivity() {
     private val viewModel by viewModels<LoginViewModel> {
@@ -51,8 +48,8 @@ class LoginActivity : AppCompatActivity() {
 
     private fun setupAction() {
         binding.loginButton.setOnClickListener {
-            val email = binding.emailEditText.text.toString()
-            val password = binding.passwordEditText.text.toString()
+            val email = binding.edLoginEmail.text.toString()
+            val password = binding.edLoginPassword.text.toString()
 
             viewModel.login(email, password).observe(this) { response ->
                 when (response) {
@@ -66,6 +63,7 @@ class LoginActivity : AppCompatActivity() {
                             Toast.makeText(this, "Token not found", Toast.LENGTH_SHORT).show()
                         }
                     }
+
                     is ApiResponse.Error -> {
                         Toast.makeText(this, response.errorMessage, Toast.LENGTH_SHORT).show()
                     }

@@ -4,12 +4,11 @@ import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
 import android.content.Intent
 import android.os.Build
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import android.view.WindowInsets
 import android.view.WindowManager
-import com.dicoding.aplikasistoryku.R
+import androidx.appcompat.app.AppCompatActivity
 import com.dicoding.aplikasistoryku.databinding.ActivityWelcomeBinding
 import com.dicoding.aplikasistoryku.view.login.LoginActivity
 import com.dicoding.aplikasistoryku.view.signup.SignupActivity
