@@ -34,8 +34,6 @@ class DetailActivity : AppCompatActivity() {
 
         val storyId = intent.getStringExtra("STORY_ID")
 
-        ViewCompat.setTransitionName(binding.imgPhoto, "imageTransition")
-
 
         // Inisialisasi ApiService dengan endpoint yang benar
         apiService = ApiConfig.getApiService()

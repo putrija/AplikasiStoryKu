@@ -7,6 +7,7 @@
 
     <ImageView
         android:id="@+id/imgPhoto"
+        android:transitionName="photo"
         android:layout_width="match_parent"
         android:layout_height="200dp"
         android:scaleType="centerCrop"
@@ -14,6 +15,7 @@
 
     <TextView
         android:id="@+id/tvName"
+        android:transitionName="name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/imgPhoto"
@@ -24,6 +26,7 @@
 
     <TextView
         android:id="@+id/tvDescription"
+        android:transitionName="description"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/tvName"

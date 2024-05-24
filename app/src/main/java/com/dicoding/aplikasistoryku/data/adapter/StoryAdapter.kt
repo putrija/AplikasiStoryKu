@@ -1,8 +1,10 @@
 package com.dicoding.aplikasistoryku.data.adapter
 
+import android.app.Activity
 import android.content.Intent
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.core.app.ActivityOptionsCompat
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -10,6 +12,7 @@ import com.bumptech.glide.Glide
 import com.dicoding.aplikasistoryku.data.response.ListStoryItem
 import com.dicoding.aplikasistoryku.databinding.ItemStoryBinding
 import com.dicoding.aplikasistoryku.view.detail.DetailActivity
+import androidx.core.util.Pair
 
 class StoryAdapter(private var storyList: List<ListStoryItem>) : RecyclerView.Adapter<StoryAdapter.StoryViewHolder>() {
 
@@ -30,7 +33,16 @@ class StoryAdapter(private var storyList: List<ListStoryItem>) : RecyclerView.Ad
             val context = holder.itemView.context
             val intent = Intent(context, DetailActivity::class.java)
             intent.putExtra("STORY_ID", story.id ?: "")
-            context.startActivity(intent)
+
+            val optionsCompat: ActivityOptionsCompat =
+                ActivityOptionsCompat.makeSceneTransitionAnimation(
+                    context as Activity,
+                    Pair(holder.binding.imgPhoto, "photo"),
+                    Pair(holder.binding.tvName, "name"),
+                    Pair(holder.binding.tvDescription, "description")
+                )
+
+            context.startActivity(intent, optionsCompat.toBundle())
         }
     }
 
@@ -38,19 +50,17 @@ class StoryAdapter(private var storyList: List<ListStoryItem>) : RecyclerView.Ad
         return storyList.size
     }
 
-    inner class StoryViewHolder(private val binding: ItemStoryBinding) : RecyclerView.ViewHolder(binding.root) {
+    inner class StoryViewHolder(val binding: ItemStoryBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(story: ListStoryItem) {
             with(binding) {
                 // Set data to views
                 Glide.with(itemView.context)
                     .load(story.photoUrl)
-                    .into(binding.imgPhoto)
+                    .into(imgPhoto)
 
                 tvName.text = story.name
                 tvDescription.text = story.description
             }
-
-
         }
     }
 }
