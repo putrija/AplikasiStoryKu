@@ -15,7 +15,9 @@ import com.dicoding.aplikasistoryku.data.api.ApiResponse
 import com.dicoding.aplikasistoryku.data.pref.UserModel
 import com.dicoding.aplikasistoryku.databinding.ActivityLoginBinding
 import com.dicoding.aplikasistoryku.view.ViewModelFactory
+import com.dicoding.aplikasistoryku.view.addStory.AddStoryActivity
 import com.dicoding.aplikasistoryku.view.main.MainActivity
+import com.dicoding.aplikasistoryku.view.signup.SignupActivity
 
 class LoginActivity : AppCompatActivity() {
     private val viewModel by viewModels<LoginViewModel> {
@@ -31,6 +33,12 @@ class LoginActivity : AppCompatActivity() {
         setupView()
         setupAction()
         playAnimation()
+        binding.signupButton.setOnClickListener { navigateToSignupActivity() }
+    }
+
+    private fun navigateToSignupActivity() {
+        val intent = Intent(this, SignupActivity::class.java)
+        startActivity(intent)
     }
 
     private fun setupView() {
@@ -102,6 +110,7 @@ class LoginActivity : AppCompatActivity() {
         val passwordEditTextLayout =
             ObjectAnimator.ofFloat(binding.passwordEditTextLayout, View.ALPHA, 1f).setDuration(100)
         val login = ObjectAnimator.ofFloat(binding.loginButton, View.ALPHA, 1f).setDuration(100)
+        val register = ObjectAnimator.ofFloat(binding.signupButton, View.ALPHA, 1f).setDuration(100)
 
         AnimatorSet().apply {
             playSequentially(
@@ -111,7 +120,8 @@ class LoginActivity : AppCompatActivity() {
                 emailEditTextLayout,
                 passwordTextView,
                 passwordEditTextLayout,
-                login
+                login,
+                register
             )
             startDelay = 100
         }.start()

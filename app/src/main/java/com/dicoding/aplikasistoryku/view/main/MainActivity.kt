@@ -14,7 +14,7 @@ import com.dicoding.aplikasistoryku.data.adapter.StoryAdapter
 import com.dicoding.aplikasistoryku.databinding.ActivityMainBinding
 import com.dicoding.aplikasistoryku.view.ViewModelFactory
 import com.dicoding.aplikasistoryku.view.addStory.AddStoryActivity
-import com.dicoding.aplikasistoryku.view.welcome.WelcomeActivity
+import com.dicoding.aplikasistoryku.view.login.LoginActivity
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
@@ -31,7 +31,7 @@ class MainActivity : AppCompatActivity() {
 
         viewModel.getSession().observe(this) { user ->
             if (!user.isLogin) {
-                startActivity(Intent(this, WelcomeActivity::class.java))
+                startActivity(Intent(this, LoginActivity::class.java))
                 finish()
             }
         }
