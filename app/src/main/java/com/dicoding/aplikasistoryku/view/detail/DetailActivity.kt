@@ -26,9 +26,11 @@ class DetailActivity : AppCompatActivity() {
         val view = binding.root
         setContentView(view)
 
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        supportActionBar?.setDisplayShowHomeEnabled(true)
+        supportActionBar?.title = ""
 
         val storyId = intent.getStringExtra("STORY_ID")
-
 
         apiService = ApiConfig.getApiService()
 

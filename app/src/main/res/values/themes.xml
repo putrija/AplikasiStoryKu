@@ -1,10 +1,17 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
-    <style name="Base.Theme.AplikasiStoryKu" parent="Theme.Material3.DayNight.NoActionBar">
+    <style name="Base.Theme.AplikasiStoryKu" parent="Theme.Material3.DayNight">
         <!-- Customize your light theme here. -->
          <item name="colorPrimary">@color/purple</item>
          <item name="colorSecondary">@color/dark_purple</item>
          <item name="colorTertiary">@color/white</item>
+        <item name="colorOnSurface">@color/white</item>
+        <item name="android:textColorPrimary">@color/white</item>
+        <item name="toolbarStyle">@style/Theme.Custom.Toolbar</item>
+    </style>
+
+    <style name="Theme.Custom.Toolbar" parent="Widget.Material3.Toolbar">
+        <item name="android:background">@color/purple</item>
     </style>
 
     <style name="Theme.AplikasiStoryKu" parent="Base.Theme.AplikasiStoryKu" />

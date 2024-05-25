@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">AplikasiStoryKu</string>
+    <string name="signup">Daftar</string>
+    <string name="login">Masuk</string>
+    <string name="title_signup_page">Halaman SignUp</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="message_login_page">Silahkan masukkan data!</string>
+    <string name="title_login_page">Halaman Login</string>
+    <string name="name">Nama</string>
+    <string name="logout">Keluar</string>
+    <string name="upload">Unggah</string>
+    <string name="gallery">Galeri</string>
+    <string name="camera">Kamera</string>
+    <string name="empty_image_warning">Silakan masukkan berkas gambar terlebih dahulu!</string>
+    <string name="empty_description_warning">Silakan masukkan deskripsi story terlebih dahulu!</string>
+    <string name="tambahkan_deskripsi_post">Tambahkan deskripsi...</string>
+    <string name="bahasa">Bahasa</string>
+</resources>

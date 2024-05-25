@@ -1,19 +1,20 @@
 <resources>
     <string name="app_name">AplikasiStoryKu</string>
-    <string name="signup">Daftar</string>
-    <string name="login">Masuk</string>
-    <string name="title_signup_page">Halaman SignUp</string>
+    <string name="signup">Sign Up</string>
+    <string name="login">Log In</string>
+    <string name="title_signup_page">SignUp Page</string>
     <string name="email">Email</string>
     <string name="password">Password</string>
-    <string name="message_login_page">Silahkan masukkan data!</string>
-    <string name="title_login_page">Halaman Login</string>
-    <string name="name">Nama</string>
-    <string name="greeting">Halo %1$s,</string>
-    <string name="logout">Keluar</string>
+    <string name="message_login_page">Please Insert the data!</string>
+    <string name="title_login_page">Login Page</string>
+    <string name="name">Name</string>
+    <string name="logout">Log Out</string>
     <string name="upload">Upload</string>
     <string name="gallery">Gallery</string>
     <string name="camera">Camera</string>
-    <string name="empty_image_warning">Silakan masukkan berkas gambar terlebih dahulu.</string>
-    <string name="empty_description_warning">Silakan masukkan deskripsi story terlebih dahulu.</string>
-    <string name="tambahkan_deskripsi_post">Tambahkan deskripsi post</string>
+    <string name="empty_image_warning">Please Insert the Photo!</string>
+    <string name="empty_description_warning">Please Insert the Description!</string>
+    <string name="tambahkan_deskripsi_post">Add the description…</string>
+    <string name="bahasa">Language</string>
+    <string name="setting">Setting</string>
 </resources>
