@@ -51,7 +51,10 @@ class LoginActivity : AppCompatActivity() {
             val email = binding.edLoginEmail.text.toString()
             val password = binding.edLoginPassword.text.toString()
 
+            showLoading(true)
+
             viewModel.login(email, password).observe(this) { response ->
+                showLoading(false)
                 when (response) {
                     is ApiResponse.Success -> {
                         val token = response.data.loginResult?.token ?: ""
@@ -112,5 +115,9 @@ class LoginActivity : AppCompatActivity() {
             )
             startDelay = 100
         }.start()
+    }
+
+    private fun showLoading(isLoading: Boolean) {
+        binding.progressBar.visibility = if (isLoading) View.VISIBLE else View.GONE
     }
 }

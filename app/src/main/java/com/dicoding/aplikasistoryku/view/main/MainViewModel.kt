@@ -16,6 +16,9 @@ class MainViewModel(private val repository: UserRepository) : ViewModel() {
     val stories: LiveData<List<ListStoryItem>>
         get() = _stories
 
+    private val _logoutResult = MutableLiveData<Boolean>()
+    val logoutResult: LiveData<Boolean> get() = _logoutResult
+
     fun getSession(): LiveData<UserModel> {
         return repository.getSession().asLiveData()
     }
@@ -23,6 +26,7 @@ class MainViewModel(private val repository: UserRepository) : ViewModel() {
     fun logout() {
         viewModelScope.launch {
             repository.logout()
+            _logoutResult.value = true
         }
     }
 

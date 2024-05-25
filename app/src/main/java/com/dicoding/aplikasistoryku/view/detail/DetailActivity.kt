@@ -2,6 +2,7 @@ package com.dicoding.aplikasistoryku.view.detail
 
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
@@ -36,6 +37,8 @@ class DetailActivity : AppCompatActivity() {
             ViewModelFactory(applicationContext)
         ).get(DetailViewModel::class.java)
 
+        showLoading(true)
+
         CoroutineScope(Dispatchers.Main).launch {
             val token = detailViewModel.getToken().value
             token?.let {
@@ -52,11 +55,17 @@ class DetailActivity : AppCompatActivity() {
                         } else {
                             Log.e("API_ERROR", response.message ?: "Unknown error")
                         }
+                        showLoading(false)
                     }
                 } catch (e: Exception) {
                     Log.e("API_ERROR", e.message ?: "Unknown error")
+                    showLoading(false)
                 }
             }
         }
+    }
+
+    private fun showLoading(isLoading: Boolean) {
+        binding.progressBar.visibility = if (isLoading) View.VISIBLE else View.GONE
     }
 }

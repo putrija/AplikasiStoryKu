@@ -59,6 +59,7 @@ class SignupActivity : AppCompatActivity() {
             } else if (password.length < 8) {
                 binding.edRegisterPassword.setError("Password tidak boleh kurang dari 8 karakter")
             } else {
+                showLoading(true)
                 registerUser(name, email, password)
             }
         }
@@ -80,6 +81,8 @@ class SignupActivity : AppCompatActivity() {
                 Toast.makeText(this@SignupActivity, errorMessage, Toast.LENGTH_SHORT).show()
             } catch (e: Exception) {
                 Toast.makeText(this@SignupActivity, "Registrasi gagal", Toast.LENGTH_SHORT).show()
+            } finally {
+                showLoading(false)
             }
         }
     }
@@ -132,5 +135,9 @@ class SignupActivity : AppCompatActivity() {
         val pattern = Pattern.compile(emailPattern)
         val matcher = pattern.matcher(email)
         return matcher.matches()
+    }
+
+    private fun showLoading(isLoading: Boolean) {
+        binding.progressBar.visibility = if (isLoading) View.VISIBLE else View.GONE
     }
 }

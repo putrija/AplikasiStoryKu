@@ -3,8 +3,10 @@ package com.dicoding.aplikasistoryku.view.main
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
+import android.view.View
 import android.view.WindowInsets
 import android.view.WindowManager
+import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -38,6 +40,7 @@ class MainActivity : AppCompatActivity() {
         setupAction()
         setupRecyclerView()
 
+        showLoading(true)
         viewModel.getStoriesFromApi()
         observeStories()
         binding.fabAddStory.setOnClickListener { navigateToAddStory() }
@@ -63,7 +66,19 @@ class MainActivity : AppCompatActivity() {
 
     private fun setupAction() {
         binding.actionLogout.setOnClickListener {
+            showLoading(true)
             viewModel.logout()
+        }
+
+        observeLogout()
+    }
+
+    private fun observeLogout() {
+        viewModel.logoutResult.observe(this) { isLoggedOut ->
+            if (isLoggedOut) {
+                showLoading(false)
+                Toast.makeText(this, "Logout akun berhasil", Toast.LENGTH_SHORT).show()
+            }
         }
     }
 
@@ -76,6 +91,11 @@ class MainActivity : AppCompatActivity() {
     private fun observeStories() {
         viewModel.stories.observe(this) { stories ->
             storyAdapter.setStories(stories)
+            showLoading(false)
         }
+    }
+
+    private fun showLoading(isLoading: Boolean) {
+        binding.progressBar.visibility = if (isLoading) View.VISIBLE else View.GONE
     }
 }
