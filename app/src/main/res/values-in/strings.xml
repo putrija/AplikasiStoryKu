@@ -17,4 +17,8 @@
     <string name="empty_description_warning">Silakan masukkan deskripsi story terlebih dahulu!</string>
     <string name="tambahkan_deskripsi_post">Tambahkan deskripsi...</string>
     <string name="bahasa">Bahasa</string>
+    <string name="email_invalid_message">Email tidak valid</string>
+    <string name="password_length_message">Password tidak boleh kurang dari 8 karakter</string>
+    <string name="logout_success_message">Logout berhasil</string>
+    <string name="signup_failed">Registrasi gagal</string>
 </resources>

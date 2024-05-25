@@ -4,6 +4,7 @@ import android.content.Context
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.AttributeSet
+import com.dicoding.aplikasistoryku.R
 import com.google.android.material.textfield.TextInputEditText
 
 class PasswordValidationEditText : TextInputEditText {
@@ -30,7 +31,7 @@ class PasswordValidationEditText : TextInputEditText {
 
             override fun afterTextChanged(s: Editable?) {
                 if (s.toString().length < 8) {
-                    error = "Password tidak boleh kurang dari 8 karakter"
+                    error = context.getString(R.string.password_length_message)
                 } else {
                     error = null
                 }

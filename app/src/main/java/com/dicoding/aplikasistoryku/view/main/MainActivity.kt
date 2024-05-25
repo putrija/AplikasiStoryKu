@@ -24,9 +24,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private lateinit var storyAdapter: StoryAdapter
 
-    private val viewModel by viewModels<MainViewModel> {
-        ViewModelFactory(this)
-    }
+    private val viewModel by viewModels<MainViewModel> { ViewModelFactory(this) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -80,7 +78,8 @@ class MainActivity : AppCompatActivity() {
         viewModel.logoutResult.observe(this) { isLoggedOut ->
             if (isLoggedOut) {
                 showLoading(false)
-                Toast.makeText(this, "Logout akun berhasil", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, getString(R.string.logout_success_message), Toast.LENGTH_SHORT)
+                    .show()
             }
         }
     }
@@ -113,6 +112,7 @@ class MainActivity : AppCompatActivity() {
                 startActivity(Intent(Settings.ACTION_LOCALE_SETTINGS))
                 true
             }
+
             else -> super.onOptionsItemSelected(item)
         }
     }

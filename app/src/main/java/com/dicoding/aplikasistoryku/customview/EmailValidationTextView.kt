@@ -4,6 +4,7 @@ import android.content.Context
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.AttributeSet
+import com.dicoding.aplikasistoryku.R
 import com.google.android.material.textfield.TextInputEditText
 import java.util.regex.Pattern
 
@@ -30,7 +31,7 @@ class EmailValidationEditText : TextInputEditText {
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 if (!isValidEmail(s.toString())) {
-                    setError("Email tidak valid")
+                    setError(context.getString(R.string.email_invalid_message))
                 } else {
                     error = null
                 }

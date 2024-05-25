@@ -10,6 +10,7 @@ import android.view.WindowInsets
 import android.view.WindowManager
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.dicoding.aplikasistoryku.R
 import com.dicoding.aplikasistoryku.data.api.ApiConfig
 import com.dicoding.aplikasistoryku.data.response.ErrorResponse
 import com.dicoding.aplikasistoryku.databinding.ActivitySignupBinding
@@ -56,9 +57,9 @@ class SignupActivity : AppCompatActivity() {
             val password = binding.edRegisterPassword.text.toString()
 
             if (!isValidEmail(email)) {
-                binding.edRegisterEmail.setError("Email tidak valid")
+                binding.edRegisterEmail.setError(R.string.email_invalid_message.toString())
             } else if (password.length < 8) {
-                binding.edRegisterPassword.setError("Password tidak boleh kurang dari 8 karakter")
+                binding.edRegisterPassword.setError(R.string.password_length_message.toString())
             } else {
                 showLoading(true)
                 registerUser(name, email, password)
@@ -81,7 +82,11 @@ class SignupActivity : AppCompatActivity() {
                 val errorMessage = errorResponse.message
                 Toast.makeText(this@SignupActivity, errorMessage, Toast.LENGTH_SHORT).show()
             } catch (e: Exception) {
-                Toast.makeText(this@SignupActivity, "Registrasi gagal", Toast.LENGTH_SHORT).show()
+                Toast.makeText(
+                    this@SignupActivity,
+                    getString(R.string.signup_failed),
+                    Toast.LENGTH_SHORT
+                ).show()
             } finally {
                 showLoading(false)
             }

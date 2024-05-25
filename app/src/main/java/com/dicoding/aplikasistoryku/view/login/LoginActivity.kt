@@ -15,15 +15,13 @@ import com.dicoding.aplikasistoryku.data.api.ApiResponse
 import com.dicoding.aplikasistoryku.data.pref.UserModel
 import com.dicoding.aplikasistoryku.databinding.ActivityLoginBinding
 import com.dicoding.aplikasistoryku.view.ViewModelFactory
-import com.dicoding.aplikasistoryku.view.addStory.AddStoryActivity
 import com.dicoding.aplikasistoryku.view.main.MainActivity
 import com.dicoding.aplikasistoryku.view.signup.SignupActivity
 
 class LoginActivity : AppCompatActivity() {
-    private val viewModel by viewModels<LoginViewModel> {
-        ViewModelFactory(this)
-    }
     private lateinit var binding: ActivityLoginBinding
+
+    private val viewModel by viewModels<LoginViewModel> { ViewModelFactory(this) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

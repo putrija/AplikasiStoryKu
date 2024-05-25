@@ -3,8 +3,8 @@ package com.dicoding.aplikasistoryku.view.detail
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
 import com.dicoding.aplikasistoryku.data.api.ApiConfig
 import com.dicoding.aplikasistoryku.data.api.ApiService
@@ -18,7 +18,8 @@ import kotlinx.coroutines.withContext
 class DetailActivity : AppCompatActivity() {
     private lateinit var binding: ActivityDetailBinding
     private lateinit var apiService: ApiService
-    private lateinit var detailViewModel: DetailViewModel
+
+    private val viewModel by viewModels<DetailViewModel> { ViewModelFactory(this) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -26,23 +27,16 @@ class DetailActivity : AppCompatActivity() {
         val view = binding.root
         setContentView(view)
 
-        supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        supportActionBar?.setDisplayShowHomeEnabled(true)
-        supportActionBar?.title = ""
+        supportActionBar?.hide()
 
         val storyId = intent.getStringExtra("STORY_ID")
 
         apiService = ApiConfig.getApiService()
 
-        detailViewModel = ViewModelProvider(
-            this,
-            ViewModelFactory(applicationContext)
-        ).get(DetailViewModel::class.java)
-
         showLoading(true)
 
         CoroutineScope(Dispatchers.Main).launch {
-            val token = detailViewModel.getToken().value
+            val token = viewModel.getToken().value
             token?.let {
                 try {
                     val response = apiService.getStoryDetail(storyId!!, "Bearer $it")
@@ -70,4 +64,5 @@ class DetailActivity : AppCompatActivity() {
     private fun showLoading(isLoading: Boolean) {
         binding.progressBar.visibility = if (isLoading) View.VISIBLE else View.GONE
     }
+
 }
