@@ -60,7 +60,7 @@ class MainActivity : AppCompatActivity() {
                 adapter.retry()
             }
         )
-        viewModel.getListStory.observe(this, {
+        viewModel.story.observe(this, {
             adapter.submitData(lifecycle, it)
         })
     }

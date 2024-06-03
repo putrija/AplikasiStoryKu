@@ -38,6 +38,9 @@ android {
         viewBinding = true
         buildConfig = true
     }
+    testOptions {
+        unitTests.isReturnDefaultValues = true
+    }
 }
 
 dependencies {
@@ -76,6 +79,13 @@ dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.4")
 
     implementation("androidx.paging:paging-runtime-ktx:3.3.0")
-    implementation("androidx.paging:paging-compose:3.3.0")
+//    implementation("androidx.paging:paging-compos e:3.3.0")
     implementation("androidx.room:room-paging:2.6.1")
+
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.4")
+    testImplementation("androidx.arch.core:core-testing:2.2.0")
+    coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.0.3")
+    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.6.4")
+    testImplementation("org.mockito:mockito-core:4.4.0")
+    testImplementation("org.mockito:mockito-inline:4.4.0")
 }

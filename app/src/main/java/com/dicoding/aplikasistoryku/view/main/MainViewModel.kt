@@ -14,12 +14,12 @@ import com.dicoding.aplikasistoryku.data.response.ListStoryItem
 import kotlinx.coroutines.launch
 
 class MainViewModel(private val repository: UserRepository) : ViewModel() {
-    private val _stories = MutableLiveData<List<ListStoryItem>>()
-    val stories: LiveData<List<ListStoryItem>>
-        get() = _stories
-
     private val _logoutResult = MutableLiveData<Boolean>()
     val logoutResult: LiveData<Boolean> get() = _logoutResult
+
+    val story: LiveData<PagingData<ListStoryItem>> =
+        repository.getStories().cachedIn(viewModelScope)
+
 
     fun getSession(): LiveData<UserModel> {
         return repository.getSession().asLiveData()
@@ -33,27 +33,6 @@ class MainViewModel(private val repository: UserRepository) : ViewModel() {
     }
 
     val getListStory: LiveData<PagingData<ListStoryItem>> = repository.getStories().cachedIn(viewModelScope)
-
-//    fun getStoriesFromApi() {
-//        viewModelScope.launch {
-//            try {
-//                val response = repository.getStories()
-//
-//                Log.d("API Response", response.toString())
-//
-//                if (response.isNotEmpty()) {
-//                    Log.d("List Story", "Data listStory is not empty")
-//                } else {
-//                    Log.d("List Story", "Data listStory is empty")
-//                }
-//
-//                _stories.value = response
-//
-//            } catch (e: Exception) {
-//                Log.e("Error", "Failed to fetch stories: ${e.message}")
-//            }
-//        }
-//    }
 
     fun getStoriesFromApi() =repository.getStories()
 
