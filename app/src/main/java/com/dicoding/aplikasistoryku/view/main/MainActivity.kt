@@ -14,8 +14,10 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.dicoding.aplikasistoryku.R
+import com.dicoding.aplikasistoryku.data.adapter.LoadingStateAdapter
 import com.dicoding.aplikasistoryku.data.adapter.StoryAdapter
 import com.dicoding.aplikasistoryku.databinding.ActivityMainBinding
+import com.dicoding.aplikasistoryku.databinding.ItemStoryBinding
 import com.dicoding.aplikasistoryku.view.ViewModelFactory
 import com.dicoding.aplikasistoryku.view.addStory.AddStoryActivity
 import com.dicoding.aplikasistoryku.view.login.LoginActivity
@@ -44,9 +46,23 @@ class MainActivity : AppCompatActivity() {
         setupRecyclerView()
 
         showLoading(true)
-        viewModel.getStoriesFromApi()
-        observeStories()
+        getData()
+//        viewModel.getStoriesFromApi()
+//        observeStories()
         binding.fabAddStory.setOnClickListener { navigateToAddStory() }
+    }
+
+    private fun getData() {
+        showLoading(false)
+        val adapter = StoryAdapter()
+        binding.rvStories.adapter = adapter.withLoadStateFooter(
+            footer = LoadingStateAdapter {
+                adapter.retry()
+            }
+        )
+        viewModel.getListStory.observe(this, {
+            adapter.submitData(lifecycle, it)
+        })
     }
 
     private fun navigateToAddStory() {
@@ -86,17 +102,17 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setupRecyclerView() {
-        storyAdapter = StoryAdapter(emptyList())
+        storyAdapter = StoryAdapter()
         binding.rvStories.layoutManager = LinearLayoutManager(this)
         binding.rvStories.adapter = storyAdapter
     }
 
-    private fun observeStories() {
-        viewModel.stories.observe(this) { stories ->
-            storyAdapter.setStories(stories)
-            showLoading(false)
-        }
-    }
+//    private fun observeStories() {
+//        viewModel.stories.observe(this) { stories ->
+//            storyAdapter.setStories(stories)
+//            showLoading(false)
+//        }
+//    }
 
     private fun showLoading(isLoading: Boolean) {
         binding.progressBar.visibility = if (isLoading) View.VISIBLE else View.GONE

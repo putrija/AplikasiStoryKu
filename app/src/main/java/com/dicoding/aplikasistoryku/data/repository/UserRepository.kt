@@ -1,13 +1,20 @@
 package com.dicoding.aplikasistoryku.data.repository
 
 import android.util.Log
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.liveData
+import androidx.paging.Pager
+import androidx.paging.PagingConfig
+import androidx.paging.PagingData
+import androidx.paging.liveData
 import com.dicoding.aplikasistoryku.data.api.ApiResponse
 import com.dicoding.aplikasistoryku.data.api.ApiService
+import com.dicoding.aplikasistoryku.data.pagingSource.StoryPagingSource
 import com.dicoding.aplikasistoryku.data.pref.UserModel
 import com.dicoding.aplikasistoryku.data.pref.UserPreference
 import com.dicoding.aplikasistoryku.data.response.ErrorResponse
 import com.dicoding.aplikasistoryku.data.response.FileUploadResponse
+import com.dicoding.aplikasistoryku.data.response.ListStoryItem
 import com.dicoding.aplikasistoryku.data.response.LoginResponse
 import com.dicoding.aplikasistoryku.data.response.StoryResponse
 import com.google.gson.Gson
@@ -63,18 +70,29 @@ class UserRepository private constructor(
         return userPreference.getUser().first()
     }
 
-    suspend fun getStories(token: String): StoryResponse {
-        try {
-            return apiService.getStories("Bearer $token")
-        } catch (e: HttpException) {
-            val errorBody = e.response()?.errorBody()?.string()
-            val errorResponse = Gson().fromJson(errorBody, ErrorResponse::class.java)
-            Log.e("UserRepository", "HTTP Error: ${errorResponse.message}")
-            throw Exception("HTTP Error: ${errorResponse.message}")
-        } catch (e: Exception) {
-            Log.e("UserRepository", "Error: ${e.message}")
-            throw Exception("Error: ${e.message}")
-        }
+//    suspend fun getStories(token: String): StoryResponse {
+//        try {
+//            return apiService.getStories("Bearer $token")
+//        } catch (e: HttpException) {
+//            val errorBody = e.response()?.errorBody()?.string()
+//            val errorResponse = Gson().fromJson(errorBody, ErrorResponse::class.java)
+//            Log.e("UserRepository", "HTTP Error: ${errorResponse.message}")
+//            throw Exception("HTTP Error: ${errorResponse.message}")
+//        } catch (e: Exception) {
+//            Log.e("UserRepository", "Error: ${e.message}")
+//            throw Exception("Error: ${e.message}")
+//        }
+//    }
+
+    fun getStories(): LiveData<PagingData<ListStoryItem>> {
+        return Pager(
+            config = PagingConfig(
+                pageSize = 5
+            ),
+            pagingSourceFactory = {
+                StoryPagingSource(userPreference, apiService)
+            }
+        ).liveData
     }
 
     suspend fun getStoriesWithLocation(token: String): StoryResponse {

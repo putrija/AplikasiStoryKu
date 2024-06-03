@@ -6,6 +6,8 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
+import androidx.paging.PagingData
+import androidx.paging.cachedIn
 import com.dicoding.aplikasistoryku.data.pref.UserModel
 import com.dicoding.aplikasistoryku.data.repository.UserRepository
 import com.dicoding.aplikasistoryku.data.response.ListStoryItem
@@ -30,28 +32,29 @@ class MainViewModel(private val repository: UserRepository) : ViewModel() {
         }
     }
 
-    fun getStoriesFromApi() {
-        viewModelScope.launch {
-            try {
-                val user = repository.getUser()
-                val token = user.token
-                Log.d("Token", "Token: $token")
-                val response = repository.getStories(token)
+    val getListStory: LiveData<PagingData<ListStoryItem>> = repository.getStories().cachedIn(viewModelScope)
 
-                Log.d("API Response", response.toString())
+//    fun getStoriesFromApi() {
+//        viewModelScope.launch {
+//            try {
+//                val response = repository.getStories()
+//
+//                Log.d("API Response", response.toString())
+//
+//                if (response.isNotEmpty()) {
+//                    Log.d("List Story", "Data listStory is not empty")
+//                } else {
+//                    Log.d("List Story", "Data listStory is empty")
+//                }
+//
+//                _stories.value = response
+//
+//            } catch (e: Exception) {
+//                Log.e("Error", "Failed to fetch stories: ${e.message}")
+//            }
+//        }
+//    }
 
-                if (response.listStory.isNotEmpty()) {
-                    Log.d("List Story", "Data listStory is not empty")
-                } else {
-                    Log.d("List Story", "Data listStory is empty")
-                }
-
-                _stories.value = response.listStory
-
-            } catch (e: Exception) {
-                Log.e("Error", "Failed to fetch stories: ${e.message}")
-            }
-        }
-    }
+    fun getStoriesFromApi() =repository.getStories()
 
 }

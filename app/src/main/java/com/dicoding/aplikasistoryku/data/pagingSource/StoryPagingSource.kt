@@ -3,34 +3,47 @@ package com.dicoding.aplikasistoryku.data.pagingSource
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import com.dicoding.aplikasistoryku.data.api.ApiService
+import com.dicoding.aplikasistoryku.data.pref.UserPreference
 import com.dicoding.aplikasistoryku.data.repository.UserRepository
+import com.dicoding.aplikasistoryku.data.response.ListStoryItem
+import com.dicoding.aplikasistoryku.data.response.Story
 import com.dicoding.aplikasistoryku.data.response.StoryResponse
+import kotlinx.coroutines.flow.first
 
-//class StoryPagingSource(private val apiService: ApiService, private val userRepository: UserRepository) : PagingSource<Int, StoryResponse>() {
-//    private companion object {
-//        const val INITIAL_PAGE_INDEX = 1
-//        const val PAGE_SIZE = 20 // Ukuran halaman default
-//    }
-//
-//    override suspend fun load(params: LoadParams<Int>): LoadResult<Int, StoryResponse> {
-//        return try {
-//            val position = params.key ?: INITIAL_PAGE_INDEX
-//            val token = userRepository.getUser().token
-//            val responseData = apiService.getStories(token, position, params.loadSize)
-//            LoadResult.Page(
-//                data = responseData,
-//                prevKey = if (position == INITIAL_PAGE_INDEX) null else position - 1,
-//                nextKey = if (responseData.isEmpty()) null else position + 1
-//            )
-//        } catch (exception: Exception) {
-//            LoadResult.Error(exception)
-//        }
-//    }
-//
-//    override fun getRefreshKey(state: PagingState<Int, StoryResponse>): Int? {
-//        return state.anchorPosition?.let { anchorPosition ->
-//            val anchorPage = state.closestPageToPosition(anchorPosition)
-//            anchorPage?.prevKey?.plus(1) ?: anchorPage?.nextKey?.minus(1)
-//        }
-//    }
-//}
+class StoryPagingSource(
+    private val pref: UserPreference,
+    private val apiService: ApiService
+) : PagingSource<Int, ListStoryItem>() {
+    override suspend fun load(params: LoadParams<Int>): LoadResult<Int, ListStoryItem> {
+        return try {
+            val page = params.key ?: INITIAL_PAGE_INDEX
+            val token = pref.getUser().first().token
+            if (token.isNotEmpty()) {
+                val responseData =
+                    token.let { apiService.getStories("Bearer $it", page, params.loadSize) }
+                if (responseData.isSuccessful) {
+                    LoadResult.Page(
+                        data = responseData.body()?.listStory ?: emptyList(),
+                        prevKey = if (page == INITIAL_PAGE_INDEX) null else page - 1,
+                        nextKey = if (responseData.body()?.listStory.isNullOrEmpty()) null else page + 1
+                    )
+                } else {
+                    LoadResult.Error(Exception("Failed load story"))
+                }
+            } else {
+                LoadResult.Error(Exception("Token empty"))
+            }
+        } catch (exception: Exception) {
+            return LoadResult.Error(exception)
+        }
+    }
+
+
+    private companion object {
+        const val INITIAL_PAGE_INDEX = 1
+    }
+
+    override fun getRefreshKey(state: PagingState<Int, ListStoryItem>): Int? {
+        TODO("Not yet implemented")
+    }
+}
