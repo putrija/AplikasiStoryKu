@@ -79,7 +79,6 @@ dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.4")
 
     implementation("androidx.paging:paging-runtime-ktx:3.3.0")
-//    implementation("androidx.paging:paging-compos e:3.3.0")
     implementation("androidx.room:room-paging:2.6.1")
 
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.4")
@@ -88,4 +87,6 @@ dependencies {
     testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.6.4")
     testImplementation("org.mockito:mockito-core:4.4.0")
     testImplementation("org.mockito:mockito-inline:4.4.0")
+
+    implementation("com.google.android.gms:play-services-location:18.0.0")
 }

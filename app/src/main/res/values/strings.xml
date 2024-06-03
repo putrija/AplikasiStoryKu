@@ -20,6 +20,7 @@
     <string name="password_length_message">Password must be at least 8 characters long</string>
     <string name="logout_success_message">Logout successful</string>
     <string name="signup_failed">Signup Failed</string>
-    <string name="title_activity_maps">MapsActivity</string>
-    <string name="retry">retry</string>
+    <string name="title_activity_maps">Maps</string>
+    <string name="retry">Retry</string>
+    <string name="share_my_location">Share My location</string>
 </resources>

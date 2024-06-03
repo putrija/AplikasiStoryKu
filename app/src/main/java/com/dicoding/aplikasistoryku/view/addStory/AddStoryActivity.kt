@@ -1,15 +1,20 @@
 package com.dicoding.aplikasistoryku.view.addStory
 
+import android.Manifest
 import android.content.Intent
+import android.content.pm.PackageManager
+import android.location.Location
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.widget.CheckBox
 import android.widget.Toast
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
 import androidx.core.net.toUri
 import com.dicoding.aplikasistoryku.R
 import com.dicoding.aplikasistoryku.data.api.ApiResponse
@@ -19,6 +24,8 @@ import com.dicoding.aplikasistoryku.reduceFileImage
 import com.dicoding.aplikasistoryku.uriToFile
 import com.dicoding.aplikasistoryku.view.ViewModelFactory
 import com.dicoding.aplikasistoryku.view.main.MainActivity
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationServices
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -28,6 +35,12 @@ class AddStoryActivity : AppCompatActivity() {
     private lateinit var binding: ActivityAddStoryBinding
     private var currentImageUri: Uri? = null
     private val viewModel by viewModels<AddStoryViewModel> { ViewModelFactory(this) }
+    lateinit var location: CheckBox
+
+    private lateinit var fusedLocationClient: FusedLocationProviderClient
+    private var currentLocation: Location? = null
+    private val LOCATION_PERMISSION_REQUEST_CODE = 1001
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -35,6 +48,17 @@ class AddStoryActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         supportActionBar?.hide()
+
+        location = binding.checkBox
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
+
+        location.setOnCheckedChangeListener { buttonView, isChecked ->
+            if (isChecked) {
+                requestLocationPermission()
+            } else {
+                currentLocation = null
+            }
+        }
 
         binding.galleryButton.setOnClickListener { startGallery() }
         binding.cameraButton.setOnClickListener { startCamera() }
@@ -88,6 +112,30 @@ class AddStoryActivity : AppCompatActivity() {
         }
     }
 
+
+    private fun requestLocationPermission() {
+        if (ActivityCompat.checkSelfPermission(
+                this,
+                Manifest.permission.ACCESS_FINE_LOCATION
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
+            ActivityCompat.requestPermissions(
+                this,
+                arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
+                LOCATION_PERMISSION_REQUEST_CODE
+            )
+        } else {
+            getCurrentLocation()
+        }
+    }
+
+    private fun getCurrentLocation() {
+        fusedLocationClient.lastLocation
+            .addOnSuccessListener { location: Location? ->
+                currentLocation = location
+            }
+    }
+
     private fun uploadImage() {
         currentImageUri?.let { uri ->
             val imageFile = uriToFile(uri, this).reduceFileImage()
@@ -100,31 +148,28 @@ class AddStoryActivity : AppCompatActivity() {
                     if (description.isNotEmpty()) {
                         try {
                             val token = viewModel.getToken()
-                            viewModel.uploadStory(imageFile, description, token)
+
+                            val lat = currentLocation?.latitude ?: 0.0
+                            val lon = currentLocation?.longitude ?: 0.0
+
+                            viewModel.uploadStory(imageFile, description, token, lat, lon)
                                 .observe(this@AddStoryActivity) { result ->
-                                    if (result != null) {
-                                        when (result) {
-                                            is ApiResponse.Loading -> {
-                                                showLoading(true)
-                                            }
+                                    when (result) {
+                                        is ApiResponse.Success -> {
+                                            showToast("Story uploaded successfully")
+                                            val intent = Intent(
+                                                this@AddStoryActivity,
+                                                MainActivity::class.java
+                                            )
+                                            startActivity(intent)
+                                            finish()
+                                        }
 
-                                            is ApiResponse.Success -> {
-                                                showToast(result.data.message)
-                                                showLoading(false)
+                                        is ApiResponse.Error -> {
+                                            showToast("Error uploading story:")
+                                        }
 
-                                                val intent = Intent(
-                                                    this@AddStoryActivity,
-                                                    MainActivity::class.java
-                                                )
-                                                intent.flags =
-                                                    Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
-                                                startActivity(intent)
-                                            }
-
-                                            is ApiResponse.Error -> {
-                                                showToast(result.errorMessage)
-                                                showLoading(false)
-                                            }
+                                        is ApiResponse.Loading -> {
                                         }
                                     }
                                 }
@@ -140,6 +185,7 @@ class AddStoryActivity : AppCompatActivity() {
             }
         } ?: showToast(getString(R.string.empty_image_warning))
     }
+
 
     private fun showLoading(isLoading: Boolean) {
         binding.progressBar.visibility = if (isLoading) View.VISIBLE else View.GONE

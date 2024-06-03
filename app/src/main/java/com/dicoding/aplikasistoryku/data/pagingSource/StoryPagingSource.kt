@@ -4,10 +4,7 @@ import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import com.dicoding.aplikasistoryku.data.api.ApiService
 import com.dicoding.aplikasistoryku.data.pref.UserPreference
-import com.dicoding.aplikasistoryku.data.repository.UserRepository
 import com.dicoding.aplikasistoryku.data.response.ListStoryItem
-import com.dicoding.aplikasistoryku.data.response.Story
-import com.dicoding.aplikasistoryku.data.response.StoryResponse
 import kotlinx.coroutines.flow.first
 
 class StoryPagingSource(

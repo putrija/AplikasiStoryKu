@@ -48,6 +48,8 @@ class DetailActivity : AppCompatActivity() {
                                 .into(binding.ivDetailPhoto)
                             binding.tvDetailName.text = story?.name
                             binding.tvDetailDescription.text = story?.description
+                            binding.tvLat.text = story?.lat.toString()
+                            binding.tvLon.text = story?.lon.toString()
                         } else {
                             Log.e("API_ERROR", response.message ?: "Unknown error")
                         }

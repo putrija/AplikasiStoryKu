@@ -48,4 +48,24 @@
         tools:layout_editor_absoluteX="16dp"
         tools:text="Deskripsi Post" />
 
+    <TextView
+        android:id="@+id/tv_lat"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tv_detail_name"
+        android:transitionName="description"
+        app:layout_constraintTop_toBottomOf="@+id/tv_detail_description"
+        tools:layout_editor_absoluteX="16dp"
+        tools:text="Lat" />
+
+    <TextView
+        android:id="@+id/tv_lon"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tv_detail_name"
+        android:transitionName="description"
+        app:layout_constraintTop_toBottomOf="@+id/tv_lat"
+        tools:layout_editor_absoluteX="16dp"
+        tools:text="Lon" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

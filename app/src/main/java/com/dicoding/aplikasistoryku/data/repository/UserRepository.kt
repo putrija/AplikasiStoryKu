@@ -12,7 +12,6 @@ import com.dicoding.aplikasistoryku.data.api.ApiService
 import com.dicoding.aplikasistoryku.data.pagingSource.StoryPagingSource
 import com.dicoding.aplikasistoryku.data.pref.UserModel
 import com.dicoding.aplikasistoryku.data.pref.UserPreference
-import com.dicoding.aplikasistoryku.data.response.ErrorResponse
 import com.dicoding.aplikasistoryku.data.response.FileUploadResponse
 import com.dicoding.aplikasistoryku.data.response.ListStoryItem
 import com.dicoding.aplikasistoryku.data.response.LoginResponse
@@ -26,7 +25,6 @@ import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.asRequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
-import retrofit2.Call
 import retrofit2.HttpException
 import java.io.File
 
@@ -70,20 +68,6 @@ class UserRepository private constructor(
         return userPreference.getUser().first()
     }
 
-//    suspend fun getStories(token: String): StoryResponse {
-//        try {
-//            return apiService.getStories("Bearer $token")
-//        } catch (e: HttpException) {
-//            val errorBody = e.response()?.errorBody()?.string()
-//            val errorResponse = Gson().fromJson(errorBody, ErrorResponse::class.java)
-//            Log.e("UserRepository", "HTTP Error: ${errorResponse.message}")
-//            throw Exception("HTTP Error: ${errorResponse.message}")
-//        } catch (e: Exception) {
-//            Log.e("UserRepository", "Error: ${e.message}")
-//            throw Exception("Error: ${e.message}")
-//        }
-//    }
-
     fun getStories(): LiveData<PagingData<ListStoryItem>> {
         return Pager(
             config = PagingConfig(
@@ -99,25 +83,35 @@ class UserRepository private constructor(
         return apiService.getStoriesWithLocation("Bearer $token")
     }
 
-    fun uploadStory(imageFile: File, description: String, token: String) = liveData {
-        emit(ApiResponse.Loading)
-        val requestBody = description.toRequestBody("text/plain".toMediaType())
-        val requestImageFile = imageFile.asRequestBody("image/jpeg".toMediaType())
-        val multipartBody = MultipartBody.Part.createFormData(
-            "photo",
-            imageFile.name,
-            requestImageFile
-        )
-        try {
-            val successResponse =
-                apiService.uploadStory("Bearer $token", multipartBody, requestBody)
-            emit(ApiResponse.Success(successResponse))
-        } catch (e: HttpException) {
-            val errorBody = e.response()?.errorBody()?.string()
-            val errorResponse = Gson().fromJson(errorBody, FileUploadResponse::class.java)
-            emit(ApiResponse.Error(errorResponse.message))
+    fun uploadStory(imageFile: File, description: String, token: String, lat: Double, lon: Double) =
+        liveData {
+            emit(ApiResponse.Loading)
+            val requestBody = description.toRequestBody("text/plain".toMediaType())
+            val requestImageFile = imageFile.asRequestBody("image/jpeg".toMediaType())
+            val multipartBody = MultipartBody.Part.createFormData(
+                "photo",
+                imageFile.name,
+                requestImageFile
+            )
+            val latPart = lat.toString().toRequestBody("text/plain".toMediaType())
+            val lonPart = lon.toString().toRequestBody("text/plain".toMediaType())
+            try {
+                val successResponse =
+                    apiService.uploadStory(
+                        "Bearer $token",
+                        multipartBody,
+                        requestBody,
+                        latPart,
+                        lonPart
+                    )
+                emit(ApiResponse.Success(successResponse))
+            } catch (e: HttpException) {
+                val errorBody = e.response()?.errorBody()?.string()
+                val errorResponse = Gson().fromJson(errorBody, FileUploadResponse::class.java)
+                emit(ApiResponse.Error(errorResponse.message))
+            }
         }
-    }
+
 
     companion object {
         @Volatile

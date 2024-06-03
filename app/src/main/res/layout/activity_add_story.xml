@@ -69,7 +69,16 @@
             android:hint="@string/tambahkan_deskripsi_post"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/galleryButton" />
+            app:layout_constraintTop_toBottomOf="@+id/check_box" />
+
+        <CheckBox
+            android:id="@+id/check_box"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="@string/share_my_location"
+            app:layout_constraintStart_toStartOf="@+id/cameraButton"
+            app:layout_constraintTop_toBottomOf="@+id/cameraButton" />
 
         <Button
             android:id="@+id/button_add"

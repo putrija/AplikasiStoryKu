@@ -6,8 +6,8 @@ import java.io.File
 
 class AddStoryViewModel(private val repository: UserRepository) : ViewModel() {
 
-    fun uploadStory(file: File, description: String, token: String) =
-        repository.uploadStory(file, description, token)
+    fun uploadStory(file: File, description: String, token: String, lat: Double, lon: Double) =
+        repository.uploadStory(file, description, token, lat, lon)
 
     suspend fun getToken(): String {
         val user = repository.getUser()

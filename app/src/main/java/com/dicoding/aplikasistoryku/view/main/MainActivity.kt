@@ -17,7 +17,6 @@ import com.dicoding.aplikasistoryku.R
 import com.dicoding.aplikasistoryku.data.adapter.LoadingStateAdapter
 import com.dicoding.aplikasistoryku.data.adapter.StoryAdapter
 import com.dicoding.aplikasistoryku.databinding.ActivityMainBinding
-import com.dicoding.aplikasistoryku.databinding.ItemStoryBinding
 import com.dicoding.aplikasistoryku.view.ViewModelFactory
 import com.dicoding.aplikasistoryku.view.addStory.AddStoryActivity
 import com.dicoding.aplikasistoryku.view.login.LoginActivity
@@ -47,8 +46,6 @@ class MainActivity : AppCompatActivity() {
 
         showLoading(true)
         getData()
-//        viewModel.getStoriesFromApi()
-//        observeStories()
         binding.fabAddStory.setOnClickListener { navigateToAddStory() }
     }
 
@@ -107,12 +104,6 @@ class MainActivity : AppCompatActivity() {
         binding.rvStories.adapter = storyAdapter
     }
 
-//    private fun observeStories() {
-//        viewModel.stories.observe(this) { stories ->
-//            storyAdapter.setStories(stories)
-//            showLoading(false)
-//        }
-//    }
 
     private fun showLoading(isLoading: Boolean) {
         binding.progressBar.visibility = if (isLoading) View.VISIBLE else View.GONE
@@ -129,6 +120,7 @@ class MainActivity : AppCompatActivity() {
                 startActivity(Intent(Settings.ACTION_LOCALE_SETTINGS))
                 true
             }
+
             R.id.action_maps -> {
                 startActivity(Intent(this, MapsActivity::class.java))
                 true
