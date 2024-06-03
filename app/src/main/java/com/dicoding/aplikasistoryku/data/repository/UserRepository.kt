@@ -15,6 +15,7 @@ import com.dicoding.aplikasistoryku.data.pref.UserPreference
 import com.dicoding.aplikasistoryku.data.response.FileUploadResponse
 import com.dicoding.aplikasistoryku.data.response.ListStoryItem
 import com.dicoding.aplikasistoryku.data.response.LoginResponse
+import com.dicoding.aplikasistoryku.data.response.RegisterResponse
 import com.dicoding.aplikasistoryku.data.response.StoryResponse
 import com.google.gson.Gson
 import kotlinx.coroutines.Dispatchers
@@ -55,6 +56,23 @@ class UserRepository private constructor(
             emit(ApiResponse.Error("Login Gagal!"))
         }
     }.flowOn(Dispatchers.IO)
+
+    suspend fun register(
+        name: String,
+        email: String,
+        password: String
+    ): ApiResponse<RegisterResponse> {
+        return withContext(Dispatchers.IO) {
+            try {
+                val registerResponse = apiService.register(name, email, password)
+                ApiResponse.Success(registerResponse)
+            } catch (e: Exception) {
+                Log.e("UserRepository", "Error during registration: ${e.message}")
+                e.printStackTrace()
+                ApiResponse.Error("Registration failed")
+            }
+        }
+    }
 
     fun getSession(): Flow<UserModel> {
         return userPreference.getSession()

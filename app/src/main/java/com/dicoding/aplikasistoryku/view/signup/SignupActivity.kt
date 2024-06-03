@@ -9,21 +9,18 @@ import android.view.View
 import android.view.WindowInsets
 import android.view.WindowManager
 import android.widget.Toast
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import com.dicoding.aplikasistoryku.R
-import com.dicoding.aplikasistoryku.data.api.ApiConfig
-import com.dicoding.aplikasistoryku.data.response.ErrorResponse
 import com.dicoding.aplikasistoryku.databinding.ActivitySignupBinding
+import com.dicoding.aplikasistoryku.view.ViewModelFactory
 import com.dicoding.aplikasistoryku.view.login.LoginActivity
-import com.google.gson.Gson
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
-import retrofit2.HttpException
 import java.util.regex.Pattern
 
 class SignupActivity : AppCompatActivity() {
     private lateinit var binding: ActivitySignupBinding
+
+    private val viewModel by viewModels<SignUpViewModel> { ViewModelFactory(this) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,6 +31,24 @@ class SignupActivity : AppCompatActivity() {
         setupAction()
         playAnimation()
         binding.loginButton.setOnClickListener { navigateToLoginActivity() }
+
+        viewModel.navigateToLogin.observe(this) { navigate ->
+            if (navigate) {
+                navigateToLoginActivity()
+            }
+        }
+
+        viewModel.isLoading.observe(this) { isLoading ->
+            if (isLoading) {
+                showLoading(true)
+            } else {
+                showLoading(false)
+            }
+        }
+
+        viewModel.toastMessage.observe(this) { message ->
+            Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
+        }
     }
 
 
@@ -62,33 +77,7 @@ class SignupActivity : AppCompatActivity() {
                 binding.edRegisterPassword.setError(R.string.password_length_message.toString())
             } else {
                 showLoading(true)
-                registerUser(name, email, password)
-            }
-        }
-    }
-
-    private fun registerUser(name: String, email: String, password: String) {
-        val apiService = ApiConfig.getApiService()
-
-        GlobalScope.launch(Dispatchers.Main) {
-            try {
-                val registerResponse = apiService.register(name, email, password)
-                val message = registerResponse.message
-                Toast.makeText(this@SignupActivity, message, Toast.LENGTH_SHORT).show()
-                navigateToLoginActivity()
-            } catch (e: HttpException) {
-                val errorBody = e.response()?.errorBody()?.string()
-                val errorResponse = Gson().fromJson(errorBody, ErrorResponse::class.java)
-                val errorMessage = errorResponse.message
-                Toast.makeText(this@SignupActivity, errorMessage, Toast.LENGTH_SHORT).show()
-            } catch (e: Exception) {
-                Toast.makeText(
-                    this@SignupActivity,
-                    getString(R.string.signup_failed),
-                    Toast.LENGTH_SHORT
-                ).show()
-            } finally {
-                showLoading(false)
+                viewModel.registerUser(name, email, password)
             }
         }
     }

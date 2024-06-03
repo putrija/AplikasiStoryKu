@@ -9,6 +9,7 @@ import com.dicoding.aplikasistoryku.view.detail.DetailViewModel
 import com.dicoding.aplikasistoryku.view.login.LoginViewModel
 import com.dicoding.aplikasistoryku.view.main.MainViewModel
 import com.dicoding.aplikasistoryku.view.maps.MapsViewModel
+import com.dicoding.aplikasistoryku.view.signup.SignUpViewModel
 
 class ViewModelFactory(private val context: Context) : ViewModelProvider.NewInstanceFactory() {
     @Suppress("UNCHECKED_CAST")
@@ -16,6 +17,10 @@ class ViewModelFactory(private val context: Context) : ViewModelProvider.NewInst
         return when {
             modelClass.isAssignableFrom(LoginViewModel::class.java) -> {
                 LoginViewModel(Injection.provideRepository(context)) as T
+            }
+
+            modelClass.isAssignableFrom(SignUpViewModel::class.java) -> {
+                SignUpViewModel(Injection.provideRepository(context)) as T
             }
 
             modelClass.isAssignableFrom(MainViewModel::class.java) -> {
