@@ -20,6 +20,8 @@ import com.google.gson.Gson
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.withContext
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.MultipartBody
@@ -37,24 +39,22 @@ class UserRepository private constructor(
         userPreference.saveSession(user)
     }
 
-    suspend fun login(email: String, password: String): ApiResponse<LoginResponse> {
-        return withContext(Dispatchers.IO) {
-            try {
-                val loginResponse = apiService.login(email, password)
-                if (!loginResponse.error!! && loginResponse.loginResult != null) {
-                    val user = UserModel(email, loginResponse.loginResult.token ?: "")
-                    saveSession(user)
-                    ApiResponse.Success(loginResponse)
-                } else {
-                    ApiResponse.Error(loginResponse.message ?: "Login failed")
-                }
-            } catch (e: Exception) {
-                Log.e("UserRepository", "Error during login: ${e.message}")
-                e.printStackTrace()
-                ApiResponse.Error("Login Gagal!")
+    suspend fun login(email: String, password: String): Flow<ApiResponse<LoginResponse>> = flow {
+        try {
+            val loginResponse = apiService.login(email, password)
+            if (!loginResponse.error!! && loginResponse.loginResult != null) {
+                val user = UserModel(email, loginResponse.loginResult.token ?: "")
+                saveSession(user)
+                emit(ApiResponse.Success(loginResponse))
+            } else {
+                emit(ApiResponse.Error(loginResponse.message ?: "Login failed"))
             }
+        } catch (e: Exception) {
+            Log.e("UserRepository", "Error during login: ${e.message}")
+            e.printStackTrace()
+            emit(ApiResponse.Error("Login Gagal!"))
         }
-    }
+    }.flowOn(Dispatchers.IO)
 
     fun getSession(): Flow<UserModel> {
         return userPreference.getSession()

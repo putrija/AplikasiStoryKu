@@ -19,11 +19,13 @@ class LoginViewModel(private val userRepository: UserRepository) : ViewModel() {
 
     fun login(email: String, password: String): LiveData<ApiResponse<LoginResponse>> {
         val result = MutableLiveData<ApiResponse<LoginResponse>>()
+
         viewModelScope.launch {
-            val response = userRepository.login(email, password)
-            result.value = response
+            userRepository.login(email, password).collect { response ->
+                result.value = response
+            }
         }
+
         return result
     }
-
 }
