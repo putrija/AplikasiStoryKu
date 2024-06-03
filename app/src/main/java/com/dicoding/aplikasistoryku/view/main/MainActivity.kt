@@ -19,6 +19,7 @@ import com.dicoding.aplikasistoryku.databinding.ActivityMainBinding
 import com.dicoding.aplikasistoryku.view.ViewModelFactory
 import com.dicoding.aplikasistoryku.view.addStory.AddStoryActivity
 import com.dicoding.aplikasistoryku.view.login.LoginActivity
+import com.dicoding.aplikasistoryku.view.maps.MapsActivity
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
@@ -110,6 +111,10 @@ class MainActivity : AppCompatActivity() {
         return when (item.itemId) {
             R.id.action_language -> {
                 startActivity(Intent(Settings.ACTION_LOCALE_SETTINGS))
+                true
+            }
+            R.id.action_maps -> {
+                startActivity(Intent(this, MapsActivity::class.java))
                 true
             }
 

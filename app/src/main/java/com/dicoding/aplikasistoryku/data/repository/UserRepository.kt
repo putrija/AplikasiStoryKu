@@ -19,6 +19,7 @@ import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.asRequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
+import retrofit2.Call
 import retrofit2.HttpException
 import java.io.File
 
@@ -74,6 +75,10 @@ class UserRepository private constructor(
             Log.e("UserRepository", "Error: ${e.message}")
             throw Exception("Error: ${e.message}")
         }
+    }
+
+    suspend fun getStoriesWithLocation(token: String): StoryResponse {
+        return apiService.getStoriesWithLocation("Bearer $token")
     }
 
     fun uploadStory(imageFile: File, description: String, token: String) = liveData {

@@ -8,6 +8,7 @@ import com.dicoding.aplikasistoryku.view.addStory.AddStoryViewModel
 import com.dicoding.aplikasistoryku.view.detail.DetailViewModel
 import com.dicoding.aplikasistoryku.view.login.LoginViewModel
 import com.dicoding.aplikasistoryku.view.main.MainViewModel
+import com.dicoding.aplikasistoryku.view.maps.MapsViewModel
 
 class ViewModelFactory(private val context: Context) : ViewModelProvider.NewInstanceFactory() {
     @Suppress("UNCHECKED_CAST")
@@ -27,6 +28,10 @@ class ViewModelFactory(private val context: Context) : ViewModelProvider.NewInst
 
             modelClass.isAssignableFrom(AddStoryViewModel::class.java) -> {
                 AddStoryViewModel(Injection.provideRepository(context)) as T
+            }
+
+            modelClass.isAssignableFrom(MapsViewModel::class.java) -> {
+                MapsViewModel(Injection.provideRepository(context)) as T
             }
 
             else -> throw IllegalArgumentException("Unknown ViewModel class: " + modelClass.name)

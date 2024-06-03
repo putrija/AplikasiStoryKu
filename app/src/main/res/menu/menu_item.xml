@@ -6,4 +6,9 @@
         android:icon="@drawable/ic_bahasa"
         android:title="@string/bahasa"
         app:showAsAction="ifRoom"/>
+    <item
+        android:id="@+id/action_maps"
+        android:icon="@drawable/ic_maps"
+        android:title="@string/bahasa"
+        app:showAsAction="ifRoom"/>
 </menu>
